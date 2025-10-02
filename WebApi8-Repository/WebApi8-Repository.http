@@ -1,0 +1,6 @@
+@WebApi8_Repository_HostAddress = http://localhost:5036
+
+GET {{WebApi8_Repository_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
