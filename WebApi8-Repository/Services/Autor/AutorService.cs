@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebApi8_EF.Data;
+using WebApi8_EF.Dto.Autor;
 using WebApi8_EF.Models;
 
 namespace WebApi8_EF.Services.Autor
@@ -70,6 +71,97 @@ namespace WebApi8_EF.Services.Autor
                 return resposta;
             }
             
+        }
+
+        public async Task<ResponseModel<List<AutorModel>>> CriarAutor(AutorCriacaoDto autorCriacaoDto)
+        {
+            ResponseModel<List<AutorModel>> resposta = new ResponseModel<List<AutorModel>>();
+
+            try
+            {
+                var autor = new AutorModel()
+                {
+                    Nome = autorCriacaoDto.Nome,
+                    Sobrenome = autorCriacaoDto.Sobrenome
+                };
+
+                _context.Add(autor);
+                await _context.SaveChangesAsync();
+
+                resposta.Dados = await _context.Autores.ToListAsync();
+                resposta.Mensagem = "Autor criado com sucesso.";
+
+                return resposta;
+
+            } catch (Exception ex)
+            {
+                resposta.Mensagem = ex.Message;
+                resposta.Status = false;
+                return resposta;
+            }
+        }
+
+        public async Task<ResponseModel<List<AutorModel>>> EditarAutor(AutorEdicaoDto autorEdicaoDto)
+        {
+            ResponseModel<List<AutorModel>> resposta = new ResponseModel<List<AutorModel>>();
+            try
+            {
+                var autor = await _context.Autores.FirstOrDefaultAsync(autorBanco => autorBanco.Id == autorEdicaoDto.Id);
+                if (autor == null)
+                {
+                    resposta.Mensagem = "Nenhum autor encontrado para editar.";
+                    resposta.Status = true;
+                    return resposta;
+                }
+                
+                autor.Nome = autorEdicaoDto.Nome;
+                autor.Sobrenome = autorEdicaoDto.Sobrenome;
+
+                _context.Update(autor);
+                await _context.SaveChangesAsync();
+
+                resposta.Dados = await _context.Autores.ToListAsync();
+                resposta.Mensagem = "Autor editado com sucesso.";
+                return resposta;
+
+            }
+            catch (Exception ex)
+            {
+                resposta.Mensagem = ex.Message;
+                resposta.Status = false;
+                return resposta;
+
+            }
+
+        }
+
+        public async Task<ResponseModel<List<AutorModel>>> ExcluirAutor(int idAutor)
+        {
+            ResponseModel<List<AutorModel>> resposta = new ResponseModel<List<AutorModel>>();
+            try
+            {
+                var autor = await _context.Autores.FirstOrDefaultAsync(autorBanco => autorBanco.Id == idAutor);
+                if (autor == null)
+                {
+                    resposta.Mensagem = "Nenhum autor encontrado para deletar.";
+                    resposta.Status = true;
+                    return resposta;
+                }
+                _context.Remove(autor);
+                await _context.SaveChangesAsync();
+
+                resposta.Dados = await _context.Autores.ToListAsync();
+                resposta.Mensagem = "Autor deletado com sucesso.";
+                return resposta;
+
+            }
+            catch (Exception ex)
+            {
+                resposta.Mensagem = ex.Message;
+                resposta.Status = false;
+                return resposta;
+
+            }
         }
 
         public async Task<ResponseModel<List<AutorModel>>> ListarAutores()

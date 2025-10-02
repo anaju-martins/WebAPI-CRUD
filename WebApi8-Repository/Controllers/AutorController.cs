@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using WebApi8_EF.Dto.Autor;
 using WebApi8_EF.Models;
 using WebApi8_EF.Services.Autor;
 
@@ -46,6 +46,39 @@ namespace WebApi8_EF.Controllers
                 return Ok(autor);
             }
             return BadRequest(autor);
+        }
+
+        [HttpPost("CriarAutor")]
+        public async Task<ActionResult<ResponseModel<List<AutorModel>>>> CriarAutor(AutorCriacaoDto autorCriacaoDto)
+        {
+            var autores = await _autorInterface.CriarAutor(autorCriacaoDto);
+            if (autores.Status)
+            {
+                return Ok(autores);
+            }
+            return BadRequest(autores);
+        }
+
+        [HttpPut("EditarAutor")]
+        public async Task<ActionResult<ResponseModel<List<AutorModel>>>> EditarAutor(AutorEdicaoDto autorEdicaoDto)
+        {
+            var autores = await _autorInterface.EditarAutor(autorEdicaoDto);
+            if (autores.Status)
+            {
+                return Ok(autores);
+            }
+            return BadRequest(autores);
+        }
+
+        [HttpDelete("ExcluirAutor/{idAutor}")]
+        public async Task<ActionResult<ResponseModel<List<AutorModel>>>> ExcluirAutor(int idAutor)
+        {
+            var autores = await _autorInterface.ExcluirAutor(idAutor);
+            if (autores.Status)
+            {
+                return Ok(autores);
+            }
+            return BadRequest(autores);
         }
     }
 }
