@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebApi8_EF.Data;
 using WebApi8_EF.Services.Autor;
+using WebApi8_EF.Services.Livro;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IAutorInterface, AutorService>();
+builder.Services.AddScoped<ILivroInterface, LivroService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
